@@ -4,7 +4,7 @@
  * Usage: STRATEGY=weETH-WETH-17x ts-node scripts/calculate-ratios.ts
  */
 
-import { getStrategy } from '../src/strategies';
+import { getStrategy } from './strategies';
 
 /**
  * Convert leverage to collateral ratio

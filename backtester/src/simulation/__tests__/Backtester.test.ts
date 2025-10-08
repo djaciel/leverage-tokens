@@ -18,7 +18,11 @@ describe('Backtester - Happy Path Tests', () => {
       symbol: 'USDC',
       adapter: DataAdapter.BINANCE,
     },
-    leverage: 2,
+    leverage: {
+      target: 2,
+      min: 1.9,
+      max: 2.1,
+    },
     collateralRatios: {
       min: 1.5,
       target: 2.0,
@@ -37,6 +41,8 @@ describe('Backtester - Happy Path Tests', () => {
       marketId: '0x1234567890123456789012345678901234567890123456789012345678901234',
       adapter: DataAdapter.MORPHO,
       chainId: 8453,
+      lltv: 0.945,
+      preLiquidationLeverage: 2.2,
     },
   };
 
