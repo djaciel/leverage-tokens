@@ -1,0 +1,32 @@
+{
+  "name": "backtester",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "backtest:weETH-WETH-17x": "STRATEGY=weETH-WETH-17x ts-node src/index.ts",
+    "extract:weETH-WETH-17x": "STRATEGY=weETH-WETH-17x ts-node src/index.ts --extract-only",
+    "backtest:wstETH-WETH-2x": "STRATEGY=wstETH-WETH-2x ts-node src/index.ts",
+    "extract:wstETH-WETH-2x": "STRATEGY=wstETH-WETH-2x ts-node src/index.ts --extract-only",
+    "calculate-ratios": "ts-node src/calculate-ratios.ts",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.1",
+  "devDependencies": {
+    "@types/node": "^24.6.2",
+    "@types/seedrandom": "^3.0.8",
+    "@vitest/ui": "^3.2.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "binance-api-node": "^0.12.9",
+    "seedrandom": "^3.0.5"
+  }
+}
