@@ -44,6 +44,9 @@ export interface SimulationConfig {
 
   /** Annual management fee as decimal (e.g., 0.02 = 2% per year) */
   managementFeePercentage: number;
+
+  /** Optional seed for deterministic random number generation */
+  seed?: string;
 }
 
 export class SimulationEngine {
@@ -74,7 +77,7 @@ export class SimulationEngine {
     this.auctionSimulator = new AuctionSimulator({
       ...DEFAULT_AUCTION_CONFIG,
       emergencyThreshold: config.collateralRatios.preLiquidationThreshold,
-    });
+    }, config.seed);
   }
 
   /**

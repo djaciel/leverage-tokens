@@ -5,6 +5,8 @@
  * instead of assuming instant, deterministic rebalancing.
  */
 
+import seedrandom from 'seedrandom';
+
 export interface AuctionConfig {
   /** Minimum time for auction to be noticed and created (seconds) */
   minNoticeTime: number;
@@ -61,9 +63,12 @@ interface AuctionState {
 export class AuctionSimulator {
   private config: AuctionConfig;
   private activeAuction: AuctionState | null = null;
+  private rng: seedrandom.PRNG;
 
-  constructor(config: Partial<AuctionConfig> = {}) {
+  constructor(config: Partial<AuctionConfig> = {}, seed?: string) {
     this.config = { ...DEFAULT_AUCTION_CONFIG, ...config };
+    // Use provided seed or default to 'auction-simulator' for reproducibility
+    this.rng = seedrandom(seed || 'auction-simulator');
   }
 
   /**
@@ -126,7 +131,7 @@ export class AuctionSimulator {
     }
 
     // Normal case: probabilistic auction creation
-    const shouldCreateAuction = Math.random() < this.config.auctionCreationProbability;
+    const shouldCreateAuction = this.rng() < this.config.auctionCreationProbability;
 
     if (shouldCreateAuction) {
       // Someone noticed and decided to create an auction
@@ -162,7 +167,7 @@ export class AuctionSimulator {
    * Generate random number between min and max (uniform distribution)
    */
   private randomBetween(min: number, max: number): number {
-    return min + Math.random() * (max - min);
+    return min + this.rng() * (max - min);
   }
 
   /**
@@ -170,8 +175,8 @@ export class AuctionSimulator {
    */
   private randomNormal(mean: number, stdDev: number): number {
     // Box-Muller transform
-    const u1 = Math.random();
-    const u2 = Math.random();
+    const u1 = this.rng();
+    const u2 = this.rng();
     const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
     return mean + z0 * stdDev;
   }

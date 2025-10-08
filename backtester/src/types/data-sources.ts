@@ -9,6 +9,14 @@ export type Timeframe = '1m' | '3m' | '5m' | '15m' | '30m' | '1h' | '4h' | '1d' 
 export type Chain = 'ethereum' | 'base';
 
 /**
+ * Map chain ID to chain name
+ */
+export const CHAIN_ID_TO_NAME: Record<number, Chain> = {
+  1: 'ethereum',
+  8453: 'base',
+};
+
+/**
  * Time range for data fetching
  */
 export interface TimeRange {

@@ -6,6 +6,8 @@
   "scripts": {
     "backtest:weETH-WETH-17x": "STRATEGY=weETH-WETH-17x ts-node src/index.ts",
     "extract:weETH-WETH-17x": "STRATEGY=weETH-WETH-17x ts-node src/index.ts --extract-only",
+    "backtest:weETH-WETH-2x": "STRATEGY=weETH-WETH-2x ts-node src/index.ts",
+    "extract:weETH-WETH-2x": "STRATEGY=weETH-WETH-2x ts-node src/index.ts --extract-only",
     "calculate-ratios": "ts-node scripts/calculate-ratios.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -17,12 +19,14 @@
   "packageManager": "pnpm@10.15.1",
   "devDependencies": {
     "@types/node": "^24.6.2",
+    "@types/seedrandom": "^3.0.8",
     "@vitest/ui": "^3.2.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "binance-api-node": "^0.12.9"
+    "binance-api-node": "^0.12.9",
+    "seedrandom": "^3.0.5"
   }
 }

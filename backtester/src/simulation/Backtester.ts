@@ -45,6 +45,12 @@ export interface BacktestConfig {
 
   /** Annual management fee as decimal (e.g., 0.02 = 2% per year) */
   managementFeePercentage: number;
+
+  /** Optional seed for deterministic random number generation */
+  seed?: string;
+
+  /** Show detailed progress during backtest (default: true) */
+  showProgress?: boolean;
 }
 
 /**
@@ -179,16 +185,20 @@ export class Backtester {
       startTimestamp: firstDebtPrice.timestamp,
       estimatedRebalanceGasCost,
       managementFeePercentage: config.managementFeePercentage,
+      ...(config.seed && { seed: config.seed }),
     };
 
     this.engine = new SimulationEngine(simulationConfig);
 
-    console.log(`\n🎬 Initialized simulation for ${strategy.name}`);
-    console.log(`   Initial deposit: ${initialDepositCollateral} ${strategy.collateral.symbol}`);
-    console.log(`   Target leverage: ${(1 / (1 - 1/targetRatio)).toFixed(2)}x`);
-    console.log(`   Initial collateral: ${Number(initialCollateral) / DECIMALS} ${strategy.collateral.symbol}`);
-    console.log(`   Initial debt: ${Number(initialDebt) / DECIMALS} ${strategy.debt.symbol}`);
-    console.log(`   Initial shares: ${Number(initialShares) / DECIMALS}\n`);
+    const showProgress = config.showProgress !== false;
+    if (showProgress) {
+      console.log(`\n🎬 Initialized simulation for ${strategy.name}`);
+      console.log(`   Initial deposit: ${initialDepositCollateral} ${strategy.collateral.symbol}`);
+      console.log(`   Target leverage: ${(1 / (1 - 1/targetRatio)).toFixed(2)}x`);
+      console.log(`   Initial collateral: ${Number(initialCollateral) / DECIMALS} ${strategy.collateral.symbol}`);
+      console.log(`   Initial debt: ${Number(initialDebt) / DECIMALS} ${strategy.debt.symbol}`);
+      console.log(`   Initial shares: ${Number(initialShares) / DECIMALS}\n`);
+    }
   }
 
   /**
@@ -209,7 +219,11 @@ export class Backtester {
       throw new Error('Backtester not initialized. Call initialize() first.');
     }
 
-    console.log(`🚀 Running backtest...\n`);
+    const showProgress = this.config.showProgress !== false; // Default true
+    const log = (message: string) => showProgress && console.log(message);
+    const write = (message: string) => showProgress && process.stdout.write(message);
+
+    log(`🚀 Running backtest...\n`);
 
     const { debtPrices, collateralPrices, borrowAPY } = this.historicalData;
     const rebalances: RebalanceResult[] = [];
@@ -220,7 +234,7 @@ export class Backtester {
     const filteredCollateralPrices = collateralPrices.data.filter(p => p.timestamp >= backtestRange.from && p.timestamp <= backtestRange.to);
     const filteredBorrowAPY = borrowAPY.data.filter(p => p.timestamp >= backtestRange.from && p.timestamp <= backtestRange.to);
 
-    console.log(`📊 Backtest range: ${new Date(backtestRange.from * 1000).toISOString().split('T')[0]} → ${new Date(backtestRange.to * 1000).toISOString().split('T')[0]}`);
+    log(`📊 Backtest range: ${new Date(backtestRange.from * 1000).toISOString().split('T')[0]} → ${new Date(backtestRange.to * 1000).toISOString().split('T')[0]}`);
 
     // Merge and sort all data points by timestamp
     const timeline = this.mergeTimelines(filteredDebtPrices, filteredCollateralPrices, filteredBorrowAPY);
@@ -228,7 +242,7 @@ export class Backtester {
     // Note: We keep 5-minute granularity to accurately simulate auction timing.
     // The AuctionSimulator module handles the realistic delays for rebalances.
 
-    console.log(`📊 Processing ${timeline.length} time points...`);
+    log(`📊 Processing ${timeline.length} time points...`);
 
     let lastTimestamp = timeline[0]?.timestamp || 0;
     let progressCounter = 0;
@@ -276,12 +290,12 @@ export class Backtester {
       progressCounter++;
       if (progressCounter % progressInterval === 0) {
         const percent = Math.floor((progressCounter / timeline.length) * 100);
-        process.stdout.write(`\r   Progress: ${percent}%`);
+        write(`\r   Progress: ${percent}%`);
       }
     }
 
-    console.log(`\r   Progress: 100% ✓\n`);
-    console.log(`🔄 Executed ${rebalances.length} rebalances\n`);
+    log(`\r   Progress: 100% ✓\n`);
+    log(`🔄 Executed ${rebalances.length} rebalances\n`);
 
     // Calculate metrics
     const metrics = this.calculateMetrics(this.engine.getHistory(), rebalances);
