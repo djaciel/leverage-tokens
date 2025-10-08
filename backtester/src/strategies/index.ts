@@ -6,12 +6,14 @@
 
 import { StrategyConfig } from '../types/strategy';
 import { WEETH_WETH_17X } from './weETH-WETH-17x';
+import { wstETH_WETH_2x } from './wstETH-WETH-2x';
 
 /**
  * All available strategies
  */
 export const STRATEGIES: Record<string, StrategyConfig> = {
   'weETH-WETH-17x': WEETH_WETH_17X,
+  'wstETH-WETH-2x': wstETH_WETH_2x,
 };
 
 /**
