@@ -4,13 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
-    "extract": "ts-node src/data-extraction/extract.ts",
-    "backtest": "ts-node src/simulation/run-backtest.ts",
+    "backtest:weETH-WETH-17x": "STRATEGY=weETH-WETH-17x ts-node src/index.ts",
+    "extract:weETH-WETH-17x": "STRATEGY=weETH-WETH-17x ts-node src/index.ts --extract-only",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
