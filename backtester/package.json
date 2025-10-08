@@ -6,6 +6,7 @@
   "scripts": {
     "backtest:weETH-WETH-17x": "STRATEGY=weETH-WETH-17x ts-node src/index.ts",
     "extract:weETH-WETH-17x": "STRATEGY=weETH-WETH-17x ts-node src/index.ts --extract-only",
+    "calculate-ratios": "ts-node scripts/calculate-ratios.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "build": "tsc"

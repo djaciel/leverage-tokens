@@ -28,10 +28,17 @@ export interface StrategyConfig {
   /** Debt/base token (second part, e.g., 'WETH') */
   debt: TokenConfig;
 
-  /** Leverage multiplier (e.g., 17) */
-  leverage: number;
+  /** Leverage configuration */
+  leverage: {
+    /** Target leverage (e.g., 17 for 17x) */
+    target: number;
+    /** Minimum leverage - more conservative (e.g., 16.9 for 16.9x) */
+    min: number;
+    /** Maximum leverage - more aggressive (e.g., 17.3 for 17.3x) */
+    max: number;
+  };
 
-  /** Collateral ratio bounds */
+  /** Collateral ratio bounds (calculated from leverage) */
   collateralRatios: {
     min: number;
     target: number;
@@ -51,5 +58,9 @@ export interface StrategyConfig {
     marketId: string;
     adapter: DataAdapter;
     chainId: number;
+    /** Loan-to-Liquidation-Threshold-Value from Morpho market (e.g., 0.945 for 94.5%) */
+    lltv: number;
+    /** Pre-liquidation leverage threshold for emergency rebalances (e.g., 17.5 for 17.5x) */
+    preLiquidationLeverage: number;
   };
 }

@@ -23,7 +23,11 @@ export const WEETH_WETH_17X: StrategyConfig = {
     adapter: DataAdapter.BINANCE,
   },
 
-  leverage: 17,
+  leverage: {
+    target: 17,
+    min: 16.9,
+    max: 17.3,
+  },
 
   collateralRatios: {
     min: 1.06135, // From CollateralRatiosRebalanceAdapter
@@ -46,5 +50,7 @@ export const WEETH_WETH_17X: StrategyConfig = {
     marketId: '0xfd0895ba253889c243bf59bc4b96fd1e06d68631241383947b04d1c293a0cfea',
     adapter: DataAdapter.MORPHO,
     chainId: 8453, // Base
+    lltv: 0.945, // 94.5% from Morpho UI
+    preLiquidationLeverage: 17.5, // Emergency rebalance at 17.5x
   },
 };
